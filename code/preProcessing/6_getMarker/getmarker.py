@@ -16,18 +16,18 @@ os.chdir('../../../data/')
 # %%
 
 class Target_parameter:
-    case_name, Zeros                = 'rbc_300mm', 5
-    t0, t1, cam, plane              = 1, 10, 0, 1
+    case_name, Zeros                = '5000', 5 #'rbc_300mm', 5
+    t0, t1, cam, plane              = 1, 1, 0, 1
     alpha                           = 0.1
     
-    threshold                       = 950
+    threshold                       = 100 #950
     minArea , maxArea               = 30 , 200
     distance_line                   = 20
     
     N_marker                        = int(19*19)
-    depth                           = ['y',[26,  88, 150, 212, 274]] # [mm]
-    startPoint                      = ['xz',15,15] # [mm]
-    spacing                         = 15 # [mm]
+    depth                           = ['x', [0. , 0.2, 0.4, 0.6, 0.8, 1. ]]            #['y',[26,  88, 150, 212, 274]] # [mm]
+    startPoint                      = ['yz',0,0]    #['xz',15,15] # [mm]
+    spacing                         = 1/18          #15 # [mm]
 
 # %%
     
