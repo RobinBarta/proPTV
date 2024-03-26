@@ -11,6 +11,7 @@ lazy_loader==0.3
 matplotlib==3.8.0
 networkx==3.1
 numpy==1.26.1 #1.21.0
+netCDF4
 opencv-python==4.8.1.78
 packaging==23.2
 pandas==2.1.1
