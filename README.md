@@ -82,3 +82,8 @@ When proPTV is useful for your scientific work, you may cite us as:
 [2] Herzog, Sebastian, et al. "A probabilistic particle tracking framework for guided and Brownian motion systems with high particle densities." SN computer science 2.6 (2021): 485, https://doi.org/10.1007/s42979-021-00879-z
 
 and include the licence file in all copies with modifications or other code that uses parts of the proPTV framework.
+
+## Contact
+
+If you have a question or need help installing proPTV or fixing a bug you have found, please contact me: robin.barta@dlr.de
+I am happy to help and look forward to meeting you.
