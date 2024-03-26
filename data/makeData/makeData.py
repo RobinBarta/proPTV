@@ -40,6 +40,7 @@ def main():
     ax, ay = [np.loadtxt(params.path_calib.format(cam=c,xy="x")) for c in params.cams], [np.loadtxt(params.path_calib.format(cam=c,xy="y")) for c in params.cams]
     
     # make output folder
+    os.makedirs('output',exist_ok=True)
     os.makedirs(params.path_output.format(Number=int(params.N_particles),times=int(params.freq)),exist_ok=True)
     os.makedirs(params.path_output.format(Number=int(params.N_particles),times=int(params.freq))+'/particle_images',exist_ok=True) 
     os.makedirs(params.path_output.format(Number=int(params.N_particles),times=int(params.freq))+'/calibration_images',exist_ok=True) 
