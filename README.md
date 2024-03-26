@@ -35,9 +35,7 @@ proPTV includes the following tools needed to identify and track the three-dimen
 
 #### Requirements:
 
-proPTV requires Python 3.10 installed with pip. It was developed and tested on Python 3.10.4 which can be downloaded at:
-  
-  `https://www.python.org/downloads/release/python-3104/`
+proPTV requires Python 3.10 installed with pip. It was developed and tested on Python 3.10.4 which can be downloaded at: https://www.python.org/downloads/release/python-3104/
 
 #### Installation:
 
