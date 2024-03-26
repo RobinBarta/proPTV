@@ -5,7 +5,7 @@ class Parameter:
     # flag if intial tracks are loaded and path to case where tracks are loaded
     loadOption, load_name, suffix = True, "run1", ""                                                                       
     # cameras + orientation
-    cams = [0,1,2,3]                                                                  
+    cams, depthaxis = [0,1,2,3], [0,0,0,0] # 0=X, 1=Y, 2=Z                                                                  
     # first frame, last frame, initialisation length, delta between frames
     t_start, t_end, t_init, dt = 0, 29, 3, 1
     
