@@ -43,7 +43,7 @@ proPTV requires Python 3.10 installed with pip. It was developed and tested on P
 
 2) install python 3.10.4 and pip on Windows or Linux
 
-3) open your terminal, navigate into the proPTV folder location and set up a venv (virtual environment) if you want to use it, else jump to point 5)
+3) open your terminal, navigate into the proPTV folder location and set up a venv (virtual environment) if you want to use it, else jump to point 5.
 
   `python -m venv venv`
 
