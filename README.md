@@ -97,7 +97,7 @@ proPTV contains two folders, the code folder stores the executable Python script
    
 12) using the scripts in code/postProcessing/8_getResults your can plot all tracks or track length histograms.
 
-Please have a look at the HowToUse.mp4 tutorial where I explain how to use proPTV on our numerical test case of turbulent Rayleigh-Bénard convection. The numerical test case can be generated with the data/makeData/makeData.py script for a specified number of particles.
+Please have a look at the videos in the tutorial folder where I explain how to use proPTV on our numerical test case of turbulent Rayleigh-Bénard convection. The numerical test case can be generated with the data/makeData/makeData.py script for a specified number of particles.
 
 ## How to cite?
 
