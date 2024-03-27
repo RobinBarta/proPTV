@@ -21,7 +21,7 @@ def Initialisation(P_clouds,t,params):
         maxVel = params.maxvel * (6-params.N_init+i+1)/(6)
         # initialse tracks forward in time
         tracks = joblib.Parallel(n_jobs=joblib.cpu_count())(joblib.delayed(Linking)(p0, Ps, maxVel, params) for p0 in tqdm(Ps[0],desc='   initialise: ',position=0,leave=True,delay=0.5))
-        tracks_i = np.asarray([track for track in tracks if track!=[]])
+        tracks_i = np.asarray([track for track in tracks if len(track)>0])
         if len(tracks_i)>0:
             tracks_i = UniqueFilter(tracks_i,params)
         # delete used points
