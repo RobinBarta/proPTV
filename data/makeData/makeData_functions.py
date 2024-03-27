@@ -82,7 +82,7 @@ def GenerateMarker(cam,ax,ay,params):
         cv2.imwrite(params.path_output_marker.format(cam=cam,plane=str(plane+1),time=str(1).zfill(params.zFill),Number=int(params.N_particles),times=int(params.freq)),img)
         # create output data
         data = np.append(data,np.vstack([np.round(x,5),np.round(y,5),X,Y,Z]).T,axis=0)
-    np.savetxt(params.path_output.format(Number=int(params.N_particles),times=int(params.freq))+'/calibration_images/markerlist_c'+str(cam)+'.txt',data,header='x,y,X,Y,Z')
+    np.savetxt(params.path_output.format(Number=int(params.N_particles),times=int(params.freq))+'/calibration_images/markers_c'+str(cam)+'.txt',data,header='x,y,X,Y,Z')
     return 0
 
 def Animation(c,fps,Frames,params):
