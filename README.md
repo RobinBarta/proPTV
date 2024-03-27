@@ -71,27 +71,31 @@ proPTV requires Python 3.10 installed with pip. It was developed and tested on P
   
 ## How to use proPTV?
 
-proPTV includes two folders, the code folder stores the execuable python scripts and the data folder stores input and output files of each processed experiment. All you need to provide are raw camera images of the seeded particles with names c{cam}_{time}.tif and images of a calibration plate at different depth positions to the view axis of each camera. Note that the number of cameras, i.e. cam, ranges from 0 to NumberOfCameras-1. When you have the required input files navigate to code/preProcessing and follow the steps:
+proPTV contains two folders, the code folder stores the executable Python scripts and the data folder stores the input and output files of each processed experiment. All you need to provide are raw camera images of the seeded particles named c{cam}_{time}.tif and images of a calibration plate at different depth positions to the view axis of each camera. Note that the number of cameras, i.e. cam, ranges from 0 to NumberOfCameras-1. When you have the required input files, navigate to code/preProcessing and follow the steps:
 
-1) load the script in the folder 1_createDataset and modify the parameter class header and run the script to create your dataset in the data/ folder. Each dataset contains three folder, analysis which stores images created in the postprocessing, input which stores all input files, the calibration parameter and the lists of determined image particle centre positions.
+1) load the script in the 1_createDataset folder, modify the parameter class header, and run the script to create your dataset in the data/ folder. Each dataset contains three folders, analysis, which stores the postprocessed images, input, which stores all input files, the calibration parameters, and the lists of determined image particle center positions
 
-2) copy the raw camera images and the calibration target images to the desired folders in data/YourDataset/input.
+2) copy the raw camera images and the calibration target images to the folders in data/YourDataset/input.
 
 3) rename your files with 2_renameFiles and convert them into TIF images using 3_convertImagesToTIF to the required name: c{cam}_{time}.tif
 
-4) run the script 4_createMasks to create masks of the raw camera images for each camera
+4) run script 4_createMasks to create masks of the raw camera images for each camera
 
-5) run the script 5_imageProcessing to detect the particle centres on the camera images.
+5) run script 5_imageProcessing to detect the particle centres on the camera images.
 
-6) run the script 6_getMarker to identify the markers of your calibration target for each camera and to store it per plane in the xyXYZ format which holde the image coordinate xy for each 3D marker position XYZ. By modifying the parameter class in the header you can choose your desired coordinate system for each camera. Run the combineMarker.py script inside the folder to combine each xyXYZ list for each plane to the final markerList.txt for each camera which is used in the next step.
+6) run the 6_getMarker script to identify the markers of your calibration target for each camera and store them per plane in the xyXYZ format, which holds the image coordinate xy for each 3D marker position XYZ. You can select the desired coordinate system for each camera by changing the parameter class in the header. Run the combineMarker.py script inside the folder to combine each xyXYZ list for each plane into the final markerList.txt for each camera, which will be used in the next step.
 
 7) run 7_calibration to estimate the calibration parameter based on the markerLists.txt for each camera. Run 8_testCalibration to check your calibration result. You can refine the calibration parameters with 9_VSC if needed.
 
 8) go to code/main and modify the config.py file with the parameters to process your dataset
 
-9) run code/main/proPTV.py which generates tracks and stores them in data/YourDataset/output/tracks. To run the backtracking method change the backtracking option in the config file to True and load the tracks stored after using proPTV.py for the first time.
+9) run code/main/proPTV.py, which will create tracks and save them to data/YourDataset/output/tracks
 
-11) You can run the following post processing routines found in code/postProcessing: repairing, smoothing, coordinate transformation of the tracks, interpolation to Eulerian velocity fields, estimation of a divergence free Eulerian velocity field, assimilate pressure fields and plot the tracks or track length histograms using the scripts in the 8_getResults folder.
+10) to run the backtracking method, change the backtracking option in the config file to True and load the saved tracks after using proPTV.py for the first time.
+
+11) you can perform the following post-processing routines located in code/postProcessing: repair, smoothing, coordinate transformation of the tracks, interpolation to Eulerian velocity fields, estimation of a divergence-free Eulerian velocity field and assimilation of pressure fields
+   
+12) using the scripts in code/postProcessing/8_getResults your can plot all tracks or track length histograms.
 
 Please have a look at the HowToUse.mp4 tutorial where I explain how to use proPTV on our numerical test case of turbulent Rayleigh-Bénard convection. The numerical test case can be generated with the data/makeData/makeData.py script for a specified number of particles.
 
