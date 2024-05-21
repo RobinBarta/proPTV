@@ -12,6 +12,7 @@ import matplotlib.pyplot as plt
 from skimage.feature import peak_local_max
 from scipy.signal import convolve2d
 
+
 def Get_IDs(center_x, center_y, step_width, size):
     surrounding_ids = []
     for y in range(center_y - step_width, center_y + step_width + 1):
@@ -20,6 +21,14 @@ def Get_IDs(center_x, center_y, step_width, size):
             if abs(distance - step_width) < size:
                 surrounding_ids.append([y,x])
     return np.asarray(surrounding_ids)
+
+
+def Gauss(x,y,I,xmean,ymean,sigma):
+    # Gauss function to blur a particle on an image
+    X = (x-xmean) / sigma
+    Y = (y-ymean) / sigma
+    return I * np.exp( -0.5*(X**2+Y**2) ) / (2*np.pi*sigma**2)
+
 
 def ImageProcessing(cam, t, i, times, params):
     # load image
@@ -59,7 +68,7 @@ def ImageProcessing(cam, t, i, times, params):
     # calculate intensity distribution
     Imean = [np.mean(img[img>0])]
     for i in range(params.particleSize+1):
-        Imean.append( Imean[0] * np.exp( - ((float(i)/(np.sqrt(2)*params.std))**2 + (0.0/(np.sqrt(2)*params.std))**2) ) )
+        Imean.append( Gauss(i,0,Imean[0],0,0,params.std) )
     
     # peak search
     for n in range(params.runs):
