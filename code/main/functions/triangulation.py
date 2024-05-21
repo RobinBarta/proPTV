@@ -58,8 +58,10 @@ def Triangulation(ImgPoints,t,params):
         aX = np.asarray([np.loadtxt(params.calibration_path.format(cam=cam,xy="x"),delimiter=',') for cam in cams])
         aY = np.asarray([np.loadtxt(params.calibration_path.format(cam=cam,xy="y"),delimiter=',') for cam in cams])
         imgs_cams = [cv2.imread(params.case_path+'input/raw_images/c{c}/c{c}_{time}.tif'.format(c=cam,time=str(t).zfill(params.Zeros)),cv2.IMREAD_UNCHANGED) for cam in cams]
-        ImgPoints_cams = list(np.asarray(ImgPoints,dtype=object)[ [np.argwhere(cam==params.cams)[0][0] for cam in cams] ])
+        ImgPoints_cams_obj = list(np.asarray(ImgPoints,dtype=object)[ [np.argwhere(cam==params.cams)[0][0] for cam in cams] ])
+        ImgPoints_cams = [np.asarray(elemento,dtype=float) for elemento in ImgPoints_cams_obj]
         Triag += joblib.Parallel(n_jobs=joblib.cpu_count())(joblib.delayed(GetTriangulationCandidates)(point,ImgPoints_cams,imgs_cams,aX,aY,cams,currentCams,params) for point in tqdm(ImgPoints_cams[0], desc='   triangulate '+str(cams)+': ', position=0 , leave=True, delay=0.5 ))
+        #Triag += [GetTriangulationCandidates(point,ImgPoints_cams,imgs_cams,aX,aY,cams,currentCams,params) for point in tqdm(ImgPoints_cams[0], desc='   triangulate '+str(cams)+': ', position=0 , leave=True, delay=0.5 )]
     return np.array([P for P in Triag if P!=[]])
 
 def GetTriangulationCandidates(point,ImgPoints_cams,img,aX,aY,cams,currentCams,params):
