@@ -14,9 +14,9 @@ from matplotlib.colors import TwoSlopeNorm
 
 def Gauss(x,y,I,xmean,ymean,sigma):
     # Gauss function to blur a particle on an image
-    X = (x-xmean) / (np.sqrt(2)*(sigma)) 
-    Y = (y-ymean) / (np.sqrt(2)*(sigma))
-    return I * np.exp( - (X**2 + Y**2) ) / (2*np.pi*sigma)
+    X = (x-xmean) / sigma
+    Y = (y-ymean) / sigma
+    return I * np.exp( -0.5*(X**2+Y**2) ) / (2*np.pi*sigma**2)
 
 def Soloff(X,Y,Z,a):
     # Soloff calibration function: estimates camera image position from 3D particle position
@@ -34,33 +34,29 @@ def LoadNETCDF(t,List,params):
     return ti, x, y, z, u, v, w, T, p, Gr*Pr, Pr
 
 def GenerateImage(particles,params):
-    # generate camera images with Gauss blurred particles
-    # initialize image with random noise
     img = np.zeros((params.y_res,params.x_res)).astype('uint'+str(params.bit))
     # go over each particle and create the blob and put it on the image
     for p in particles:
         px, py, I = p
-        # apply a dynamic change to the intensity value of each particle
-        I = I * np.random.normal(1,params.dI/100)
-        # the projection of the particle is a triangle e.g. 3 pixles since we see such particles in experiments of small seeding particles
-        # get 2 pixels near px and py
-        dx = -1 if px-np.rint(px)<0 else 1
-        dy = -1 if py-np.rint(py)<0 else 1
-        x = np.array([np.rint(px), np.rint(px)+dx, np.rint(px)    ]).astype('uint'+str(params.bit))
-        y = np.array([np.rint(py), np.rint(py)   , np.rint(py)+dy ]).astype('uint'+str(params.bit))
+        x = np.array([ np.rint(px)-2, np.rint(px)-1,  np.rint(px),   np.rint(px)+1,  np.rint(px)+2,
+                       np.rint(px)-2, np.rint(px)-1,  np.rint(px),   np.rint(px)+1,  np.rint(px)+2, 
+                       np.rint(px)-2, np.rint(px)-1,  np.rint(px),   np.rint(px)+1,  np.rint(px)+2, 
+                       np.rint(px)-2, np.rint(px)-1,  np.rint(px),   np.rint(px)+1,  np.rint(px)+2,
+                       np.rint(px)-2, np.rint(px)-1,  np.rint(px),   np.rint(px)+1,  np.rint(px)+2,]).astype('uint'+str(params.bit))
+        y = np.array([ np.rint(py),   np.rint(py),   np.rint(py),   np.rint(py),   np.rint(py),  
+                       np.rint(py)+1, np.rint(py)+1, np.rint(py)+1, np.rint(py)+1, np.rint(py)+1,
+                       np.rint(py)+2, np.rint(py)+2, np.rint(py)+2, np.rint(py)+2, np.rint(py)+2,
+                       np.rint(py)-1, np.rint(py)-1, np.rint(py)-1, np.rint(py)-1, np.rint(py)-1,
+                       np.rint(py)-2, np.rint(py)-2, np.rint(py)-2, np.rint(py)-2, np.rint(py)-2]).astype('uint'+str(params.bit))
+        I = p[2]*np.random.normal(1,params.dI/100)
         # calculate the blob intenity distribution, the sum over I_blob is equal to I
-        I_blob = np.rint(Gauss(x,y,I,px,py,1)).astype('uint'+str(params.bit))        
-        # found out if any pixel is brighter than I_blob
-        # append the intensitiy blob to the image
+        I_blob = np.rint(Gauss(x,y,I,px,py,params.sigma)).astype('uint'+str(params.bit))
+        #img += I_blob 
         for i in range(len(x)):
-            I_old = img[y[i],x[i]].copy()
-            I_new = I_blob[i] + I_old
-            img[y[i],x[i]] = I_new
+            img[y[i],x[i]] += I_blob[i]
     # add noise
-    background = np.random.uniform(0,Gauss(0, 0, np.mean([params.I0,params.I1]), 0, 0, 1)/5, size=(params.y_res,params.x_res)).astype('uint'+str(params.bit))
-    background[img>0] = 0
     noise = np.random.uniform(0,np.sqrt(np.mean(img.copy().astype(float)[img>0]**2)/params.SNR), size=(params.y_res,params.x_res)).astype('uint'+str(params.bit))
-    img = img + background + noise
+    img = img + noise 
     return img
 
 def GenerateMarker(cam,ax,ay,params):

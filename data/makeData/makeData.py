@@ -2,12 +2,12 @@ import os, sys, cv2, random
 import numpy as np
 
 from tqdm import tqdm
-from makeData_functions import *
+from makeData_functions2 import *
 
 #%%
 class Parameter():
-        # selected number of particles (total number of particles = 64000) 
-    N_particles = 45000
+    # selected number of particles (total number of particles = 64000) 
+    N_particles = 10000
         
     # cameras used
     cams = [0,1,2,3]
@@ -15,8 +15,10 @@ class Parameter():
     x_res , y_res, bit = 800, 800, 16
     # particle intensity parameters of the images (I0,I1 absolute values, dI in percent)
     I0, I1, dI, SNR = 20000, 22000, 5, 7
+    # sigma
+    sigma = 0.70
     # select time sample: start time, number of time steps, frequency
-    t0 , Nt, freq = 540000, 30, 25
+    t0 , Nt, freq = 540000, 2, 25
     # survival probability in [%]
     Prob_survive = 100   
     # number of marker planes
