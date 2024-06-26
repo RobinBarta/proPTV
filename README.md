@@ -103,9 +103,9 @@ Please have a look at the videos in the tutorial folder where I explain how to u
 
 When proPTV is useful for your scientific work, you may cite us as:
 
-[1] Barta, Robin, et al. "proPTV - A probabilistic particle tracking velocimetry framework" Journal of Computational Physics (2023) (under review)
+[1] Barta, Robin, et al. "proPTV - A probabilistic particle tracking velocimetry framework" Journal of Computational Physics (2024): https://doi.org/10.1016/j.jcp.2024.113212
 
-[2] Herzog, Sebastian, et al. "A probabilistic particle tracking framework for guided and Brownian motion systems with high particle densities." SN computer science 2.6 (2021): 485, https://doi.org/10.1007/s42979-021-00879-z
+[2] Herzog, Sebastian, et al. "A probabilistic particle tracking framework for guided and Brownian motion systems with high particle densities." SN computer science (2021): https://doi.org/10.1007/s42979-021-00879-z
 
 and include the licence file in all copies with modifications or other code that uses parts of the proPTV framework.
 
