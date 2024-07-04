@@ -2,7 +2,7 @@ import os, sys, cv2, random
 import numpy as np
 
 from tqdm import tqdm
-from makeData_functions2 import *
+from makeData_functions import *
 
 #%%
 class Parameter():
