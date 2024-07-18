@@ -169,14 +169,14 @@ def Get3DMarkerPosition(xy,i,params):
     return XYZ
 def FindMarker(xyl,xyr,centers,img,cx,cy,params):    
     ID_l0, ID_l1 = np.argmin(np.linalg.norm(xyl[0:1]-centers,axis=1)), np.argmin(np.linalg.norm(xyl[1:2]-centers,axis=1))
-    linear_model = np.polyfit( [centers[ID_l0,0],centers[ID_l1,0]] , [centers[ID_l0,1],centers[ID_l1,1]] , 1)
+    linear_model = np.polyfit( [centers[ID_l0,0]+np.random.normal(0,1/1000),centers[ID_l1,0]+np.random.normal(0,1/1000)] , [centers[ID_l0,1]+np.random.normal(0,1/1000),centers[ID_l1,1]+np.random.normal(0,1/1000)] , 1)
     m, n = linear_model[0] , linear_model[1]
     dx, dy = ( cy + cx/m - n ) / ( m + (1/m) ), ( m * ( cy + cx/m - n ) / ( m + 1/m ) ) + n
     IDs_l = np.argwhere(np.sqrt((cx-dx)**2+(cy-dy)**2)<params.distance_line)[:,0]
     xy_l = np.array(sorted(centers[IDs_l],key=lambda e:e[1]))[::-1]
     # find marker corners in the right
     ID_r0, ID_r1 = np.argmin(np.linalg.norm(xyr[0:1]-centers,axis=1)), np.argmin(np.linalg.norm(xyr[1:2]-centers,axis=1))
-    linear_model = np.polyfit( [centers[ID_r0,0],centers[ID_r1,0]] , [centers[ID_r0,1],centers[ID_r1,1]] , 1)
+    linear_model = np.polyfit( [centers[ID_r0,0]+np.random.normal(0,1/1000),centers[ID_r1,0]+np.random.normal(0,1/1000)] , [centers[ID_r0,1]+np.random.normal(0,1/1000),centers[ID_r1,1]+np.random.normal(0,1/1000)] , 1)
     m, n = linear_model[0] , linear_model[1]
     dx, dy = ( cy + cx/m - n ) / ( m + (1/m) ), ( m * ( cy + cx/m - n ) / ( m + 1/m ) ) + n
     IDs_r = np.argwhere(np.sqrt((cx-dx)**2+(cy-dy)**2)<params.distance_line)[:,0]
