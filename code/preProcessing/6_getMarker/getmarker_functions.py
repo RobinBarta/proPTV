@@ -22,20 +22,27 @@ def Resize(img,a):
         img_resize = cv2.convertScaleAbs(cv2.resize(img, (0, 0), fx=multiplier, fy=multiplier), alpha=a)
     return img_resize, multiplier
 
-def click_event1(event, x, y, flags, param):
-    global mask_points, multiplier
-    mask_points, multiplier = param[0], param[1]
-    # checking for left mouse clicks
-    if event == cv2.EVENT_LBUTTONDOWN:
-        mask_points.append([int(np.round(y/multiplier)),int(np.round(x/multiplier))])
-        print('Corner: x = '+str(x) , 'y = '+str(y))
-    # checking for right mouse clicks     
-    if event==cv2.EVENT_RBUTTONDOWN:
-        cv2.destroyAllWindows()
+
 def CollectMask(img_resize,mask_points,multiplier):
-    cv2.imshow('Get Mask', img_resize)
-    cv2.setMouseCallback('Get Mask', click_event1, [mask_points, multiplier])
-    cv2.waitKey(0)
+    def click_event1(event, x, y, flags, param):
+        global mask_points, multiplier
+        mask_points, multiplier = param[0], param[1]
+        # checking for left mouse clicks
+        if event == cv2.EVENT_LBUTTONDOWN:
+            mask_points.append([int(np.round(y/multiplier)),int(np.round(x/multiplier))])
+            cv2.circle(img_resize, (x,y), 1, (255, 0, 0), 2)
+            print('Corner: x = '+str(x) , 'y = '+str(y))
+        # checking for right mouse clicks     
+        if event==cv2.EVENT_RBUTTONDOWN:
+            cv2.destroyAllWindows()
+    cv2.namedWindow('Masking')
+    cv2.setMouseCallback('Masking', click_event1, [mask_points,multiplier])
+    while True:
+        cv2.imshow('Masking', img_resize)
+        k = cv2.waitKey(1)
+        if k == 27:
+            break
+    cv2.destroyAllWindows()
     return mask_points
 
 def Masking(image,mask,pts):
@@ -95,25 +102,31 @@ def DeleteArtifacts(cx,cy,img_thresh,artifacts,multiplier):
     cx , cy = np.delete(cx,ID), np.delete(cy,ID)
     return cx, cy
 
-def click_event22(event, x, y, flags, param):
-    global artifacts_add, multiplier
-    artifacts_add, multiplier = param[0], param[1]
-    # checking for left mouse clicks
-    if event == cv2.EVENT_LBUTTONDOWN:
-        artifacts_add.append([int(np.round(x/multiplier)),int(np.round(y/multiplier))])
-        print('Search Artifact: x = '+str(x) , 'y = '+str(y))
-    # checking for right mouse clicks     
-    if event==cv2.EVENT_RBUTTONDOWN:
-        cv2.destroyAllWindows()
 def SearchArtifacts(cx,cy,img_thresh,artifacts_add,multiplier):
     h = 15
     cx_add, cy_add = [], []
     img_thresh_resize = cv2.cvtColor(cv2.convertScaleAbs(cv2.resize(img_thresh, (0, 0), fx=multiplier, fy=multiplier), alpha=1),cv2.COLOR_GRAY2RGB)
     for cxi,cyi in zip(cx,cy):
         cv2.circle(img_thresh_resize, (int(np.round(cxi*multiplier)),int(np.round(cyi*multiplier))), 1, (0, 0, 255), 3)
-    cv2.imshow('Search Artifacts', img_thresh_resize)
+    def click_event22(event, x, y, flags, param):
+        global artifacts_add, multiplier
+        artifacts_add, multiplier = param[0], param[1]
+        # checking for left mouse clicks
+        if event == cv2.EVENT_LBUTTONDOWN:
+            artifacts_add.append([int(np.round(x/multiplier)),int(np.round(y/multiplier))])
+            cv2.circle(img_thresh_resize, (x,y), 1, (0, 255, 0), 2)
+            print('Search Artifact: x = '+str(x) , 'y = '+str(y))
+        # checking for right mouse clicks     
+        if event==cv2.EVENT_RBUTTONDOWN:
+            cv2.destroyAllWindows()
+    cv2.namedWindow('Search Artifacts')
     cv2.setMouseCallback('Search Artifacts', click_event22, [artifacts_add,multiplier])
-    cv2.waitKey(0)
+    while True:
+        cv2.imshow('Search Artifacts', img_thresh_resize)
+        k = cv2.waitKey(1)
+        if k == 27:
+            break
+    cv2.destroyAllWindows()
     for a in artifacts_add:
         ax, ay = int(np.round(a[0])) , int(np.round(a[1]))
         img_a = np.zeros_like(img_thresh)

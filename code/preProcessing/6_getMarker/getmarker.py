@@ -16,25 +16,25 @@ os.chdir('../../../data/')
 # %%
 
 class Target_parameter:
-    case_name, Zeros                = '5000', 5 #'rbc_300mm', 5
-    t0, t1, cam, plane              = 1, 1, 0, 1
+    case_name, Zeros                = 'RBC300_reversal_dense', 5 #'rbc_300mm', 5
+    t0, t1, cam, plane              = 1, 10, 0, 1
     alpha                           = 0.1
     
-    threshold                       = 100 #950
+    threshold                       = 900
     minArea , maxArea               = 30 , 200
     distance_line                   = 20
     
     N_marker                        = int(19*19)
-    depth                           = ['x', [0. , 0.2, 0.4, 0.6, 0.8, 1. ]]            #['y',[26,  88, 150, 212, 274]] # [mm]
-    startPoint                      = ['yz',0,0]    #['xz',15,15] # [mm]
-    spacing                         = 1/18          #15 # [mm]
+    depth                           = ['y',[12,  43,  74, 105, 136, 167, 198, 229, 260]] # [mm]
+    startPoint                      = ['xz',17,15] # [mm]
+    spacing                         = 15 # [mm]
 
 # %%
     
     
 def main():
     params = Target_parameter()
-    params.image_input = params.case_name+"/input/calibration_images/c{cam}/{plane}/calib_c{cam}_{plane}_{time}.tif"
+    params.image_input = params.case_name+"/input/calibration_images/c{cam}/{plane}/c{cam}_{plane}_{time}.tif"
     params.markerList_output = params.case_name+"/input/calibration_images/c{cam}/marker_c{cam}_{plane}.txt"
     
     # define ouput lists
@@ -53,7 +53,7 @@ def main():
     img_copy = img.copy()
     
     # create mask , by clicking: leftbot , lefttop, righttop, rightbot
-    print('Select mask points: (right-click to finish)')
+    print('Select mask points: (ESC to finish)')
     mask_points = CollectMask(img_resize,mask_points,multiplier)
     img_masked = Masking(img,np.zeros(img.shape),np.asarray(mask_points))
     print('')
@@ -73,7 +73,7 @@ def main():
     print(' deleted ' + str(len(cx)-len(cx_del)) + ' marker\n')
     
     # search again
-    print('Search new marker: (right-click to finish)')
+    print('Search new marker: (ESC to finish)')
     cx_add, cy_add = SearchArtifacts(cx_del,cy_del,img_thresh,artifacts_add,multiplier)
     cx, cy = np.append(cx_del,cx_add),np.append(cy_del,cy_add)
     print(' found ' + str(len(cx)) + ' total marker\n')
