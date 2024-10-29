@@ -23,7 +23,7 @@ class Imgproc_parameter:
     debug, cams = False, [0,1,2,3]
     
     delete_artifacts = False
-    blur = False
+    blur, Gauskernel, Gauskernelstd = False, [3,3], 1.3
     
     window, weight_min = 3, 1.2 # 0, 0 | 3, 1.2
     threshold, threshold_minimg = 18, 2000 # 0,0 | 18, 2000
