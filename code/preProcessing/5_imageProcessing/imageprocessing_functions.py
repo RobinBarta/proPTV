@@ -58,7 +58,7 @@ def ImageProcessing(cam, t, i, times, params):
         
     # blur
     if params.blur == True:
-        img = cv2.GaussianBlur(img, [3,3], 1)
+        img = cv2.GaussianBlur(img, params.Gauskernel, params.Gauskernelstd)
     img = np.rint(img) 
 
     # create particle list for peak detection
