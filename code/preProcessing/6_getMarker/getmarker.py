@@ -16,25 +16,26 @@ os.chdir('../../../data/')
 # %%
 
 class Target_parameter:
-    case_name, Zeros                = 'RBC300_reversal_dense', 5 #'rbc_300mm', 5
-    t0, t1, cam, plane              = 1, 10, 0, 1
+    case_name, Zeros                = 'Ilmenau', 5
+    t0, t1, cam, plane              = 1, 1, 3, 3
     alpha                           = 0.1
     
-    threshold                       = 900
-    minArea , maxArea               = 30 , 200
-    distance_line                   = 20
+    threshold                       = 50000
+    minArea , maxArea               = 100 , 1000
+    distance_line                   = 30
     
-    N_marker                        = int(19*19)
-    depth                           = ['y',[12,  43,  74, 105, 136, 167, 198, 229, 260]] # [mm]
-    startPoint                      = ['xz',17,15] # [mm]
-    spacing                         = 15 # [mm]
+    N_marker                        = int(16*25)
+    N_x, N_y                        = 25, 16
+    depth                           = ['y',[-700,0,700]] # [mm]
+    startPoint                      = ['xz',0,80] # [mm]
+    spacing                         = 40 # [mm]
 
 # %%
     
     
 def main():
     params = Target_parameter()
-    params.image_input = params.case_name+"/input/calibration_images/c{cam}/{plane}/c{cam}_{plane}_{time}.tif"
+    params.image_input = params.case_name+"/input/calibration_images/c{cam}/{plane}/calib_c{cam}_{plane}_{time}.tif"
     params.markerList_output = params.case_name+"/input/calibration_images/c{cam}/marker_c{cam}_{plane}.txt"
     
     # define ouput lists
@@ -79,12 +80,16 @@ def main():
     print(' found ' + str(len(cx)) + ' total marker\n')
     
     # marker list sorting, from bot to top, by clicking left right
-    print('Search corner marker (left(down,up) -> right(down,up)): (ESC to finish)')
+    print('Search corner marker (left(down,up) -> right(down,up)): (ESC to finish)\n')
     xyl, xyr = CollectMarkerPoints(img_thresh,cx,cy,marker_lines,multiplier)
     centers = np.vstack([cx,cy]).T
     marker_points = FindMarker(xyl,xyr,centers,img_copy,cx,cy,params)
     
+    # correct marker grid
+    print('Correcting marker grid')
+    marker_points_cor = Grid_correction(marker_points,img_copy,params)
+    
     # output marker list
-    np.savetxt(params.markerList_output.format(cam=params.cam,plane=params.plane),marker_points,header='x,y,X,Y,Z')
+    np.savetxt(params.markerList_output.format(cam=params.cam,plane=params.plane),marker_points_cor,header='x,y,X,Y,Z')
 if __name__ == "__main__":
     main()

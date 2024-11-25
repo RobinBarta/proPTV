@@ -6,6 +6,8 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 from skimage.draw import polygon
 from skimage.feature import peak_local_max
+from scipy.optimize import least_squares
+from sklearn.linear_model import LinearRegression
         
 def Resize(img,a):
     root = tk.Tk()
@@ -216,3 +218,43 @@ def FindMarker(xyl,xyr,centers,img,cx,cy,params):
         i+=1
     plt.show()
     return marker_points
+
+def fit_line(x, y):
+    reg = LinearRegression().fit((x+np.random.normal(0,1/1000,len(x))).reshape(-1, 1), (y+np.random.normal(0,1/1000,len(y))).reshape(-1, 1))
+    return reg.coef_[0][0], reg.intercept_[0]
+def find_intersections_vectorized(m_h, n_h, m_v, n_v):
+    m_h = np.asarray(m_h)[:, np.newaxis]  # Make column vector
+    n_h = np.asarray(n_h)[:, np.newaxis]  # Make column vector
+    m_v = np.asarray(m_v)[np.newaxis, :]  # Make row vector
+    n_v = np.asarray(n_v)[np.newaxis, :]  # Make row vector
+    # Broadcasting to compute all intersections at once
+    x = (n_v - n_h) / (m_h - m_v)
+    y = m_h * x + n_h
+    # Mask out parallel lines (where m_h == m_v)
+    mask = ~(m_h == m_v)
+    x = x[mask]
+    y = y[mask]
+    return np.column_stack([x, y])
+def Grid_correction(marker_points,img,params):
+    xy = marker_points[:,:2]
+    XYZ = marker_points[:,2:]
+    a, b = xy[:,0], xy[:,1]
+    m_h, n_h = [], []
+    for i in range(params.N_y):
+        m, n = fit_line(a[int(i*params.N_x):int((i+1)*params.N_x)], b[int(i*params.N_x):int((i+1)*params.N_x)])
+        m_h.append(m)
+        n_h.append(n)
+    m_v, n_v = [], []
+    for i in range(params.N_x):
+        m1, n1 = fit_line(a[i::params.N_x], b[i::params.N_x])
+        m_v.append(m1)
+        n_v.append(n1)
+    xy_cor = find_intersections_vectorized(m_h, n_h, m_v, n_v)
+    marker_points_cor = np.append(xy_cor,XYZ,axis=1)
+    # plot correction
+    plt.figure()
+    plt.imshow(img,cmap='gray',vmax=np.mean(img))
+    plt.plot(xy[:,0],xy[:,1],'o',c='red')
+    plt.plot(xy_cor[:,0],xy_cor[:,1],'o',c='green')
+    plt.show()
+    return marker_points_cor
